@@ -19,6 +19,9 @@ Offical Keras (TensorFlow) implementaiton. If you have any questions or need mor
 * [NYU Depth V2](https://s3-eu-west-1.amazonaws.com/densedepth/nyu.h5) (165 MB)
 * [KITTI](https://s3-eu-west-1.amazonaws.com/densedepth/kitti.h5) (165 MB)
 
+## Demo
+* After downloading the pre-trained model (nyu.h5), run `python test.py`. You should see a montage of images with their estimated depth maps.
+
 ## Data
 * [NYU Depth V2 (50K)](https://s3-eu-west-1.amazonaws.com/densedepth/nyu_data.zip) (4.1 GB): You don't need to extract the dataset since the code loads the entire zip file into memory when training.
 * [KITTI](http://www.cvlibs.net/datasets/kitti/): copy the raw data to a folder with the path '../kitti'. Our method expects dense input depth maps, therefore, you need to run a depth [inpainting method](https://cs.nyu.edu/~silberman/datasets/nyu_depth_v2.html) on the Lidar data. For our experiments, we used our [Python re-implmentaiton](https://gist.github.com/ialhashim/be6235489a9c43c6d240e8331836586a) of the Matlab code provided with NYU Depth V2 toolbox. The entire 80K images took 2 hours on an 80 nodes cluster for inpainting. For our training, we used the subset defined [here](https://s3-eu-west-1.amazonaws.com/densedepth/kitti_train.csv).
@@ -26,9 +29,6 @@ Offical Keras (TensorFlow) implementaiton. If you have any questions or need mor
 
 ## Training
 * Run `python train.py --data nyu --gpus 4 --bs 8`.
-
-## Demo
-Coming soon.
 
 ## Reference
 Corresponding paper to cite:
