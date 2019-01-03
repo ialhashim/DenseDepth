@@ -6,10 +6,13 @@ Offical Keras (TensorFlow) implementaiton. If you have any questions or need mor
 ## Results
 
 * KITTI
-<p align="center"><img style="max-width:500px" src="https://s3-eu-west-1.amazonaws.com/densedepth/densedepth_results_01.jpg" alt="monodepth"></p>
+<p align="center"><img style="max-width:500px" src="https://s3-eu-west-1.amazonaws.com/densedepth/densedepth_results_01.jpg" alt="KITTI"></p>
 
 * NYU Depth V2
-<p align="center"><img style="max-width:500px" src="https://s3-eu-west-1.amazonaws.com/densedepth/densedepth_results_02.jpg" alt="monodepth"></p>
+<p align="center">
+  <img style="max-width:500px" src="https://s3-eu-west-1.amazonaws.com/densedepth/densedepth_results_02.jpg" alt="NYU Depth v2">
+  <img style="max-width:500px" src="https://s3-eu-west-1.amazonaws.com/densedepth/densedepth_results_03.jpg" alt="NYU Depth v2 table">
+</p>
 
 ## Requirements
 * This code is tested with Keras 2.2.4, Tensorflow 1.13, CUDA 9.0, on a machine with an NVIDIA Titan V and 16GB+ RAM running on Windows 10.
