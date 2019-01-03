@@ -20,7 +20,7 @@ def load_images(image_files):
         loaded_images.append(x)
     return np.stack(loaded_images, axis=0)
 
-def display_images(outputs, inputs=None, is_colormap=True, is_rescale=True):
+def display_images(outputs, inputs=None, gt=None, is_colormap=True, is_rescale=True):
     import matplotlib.pyplot as plt
     import skimage
     from skimage.transform import resize
@@ -44,6 +44,11 @@ def display_images(outputs, inputs=None, is_colormap=True, is_rescale=True):
             x = resize(x, shape, preserve_range=True, mode='reflect', anti_aliasing=True )
             imgs.append(x)
 
+        if isinstance(gt, (list, tuple, np.ndarray)):
+            x = to_multichannel(gt[i])
+            x = resize(x, shape, preserve_range=True, mode='reflect', anti_aliasing=True )
+            imgs.append(x)
+
         if is_colormap:
             rescaled = outputs[i][:,:,0]
             if is_rescale:
@@ -53,9 +58,14 @@ def display_images(outputs, inputs=None, is_colormap=True, is_rescale=True):
         else:
             imgs.append(to_multichannel(outputs[i]))
 
-        img_pair = np.hstack(imgs)
-        all_images.append(img_pair)
+        img_set = np.hstack(imgs)
+        all_images.append(img_set)
 
     all_images = np.stack(all_images)
     
     return skimage.util.montage(all_images, multichannel=True, fill=(0,0,0))
+
+def save_images(filename, outputs, inputs=None, gt=None, is_colormap=True, is_rescale=False):
+    montage =  display_images(outputs, inputs, is_colormap, is_rescale)
+    im = Image.fromarray(np.uint8(montage*255))
+    im.save(filename)
