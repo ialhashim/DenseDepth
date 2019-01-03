@@ -16,8 +16,8 @@ from keras.utils.vis_utils import plot_model
 parser = argparse.ArgumentParser(description='High Quality Monocular Depth Estimation via Transfer Learning')
 parser.add_argument('--data', default='nyu', type=str, help='Training dataset.')
 parser.add_argument('--lr', type=float, default=0.0001, help='Learning rate')
-parser.add_argument('--bs', type=int, default=4, help='Batch size')
-parser.add_argument('--epochs', type=int, default=50, help='Number of epochs')
+parser.add_argument('--bs', type=int, default=2, help='Batch size')
+parser.add_argument('--epochs', type=int, default=20, help='Number of epochs')
 parser.add_argument('--gpus', type=int, default=1, help='The number of GPUs to use')
 parser.add_argument('--gpuids', type=str, default='0', help='IDs of GPUs to use')
 parser.add_argument('--mindepth', type=float, default=10.0, help='Minimum of input depths')
@@ -38,11 +38,11 @@ else:
 
 # Data loaders
 if args.data == 'nyu':
-    train_generator, test_generator = get_nyu_train_test_data( args.batch_size )
+    train_generator, test_generator = get_nyu_train_test_data( args.bs )
 
 # Training session details
 runID = str(int(time.time())) + '-n' + str(len(train_generator)) + '-e' + str(args.epochs) + \
-        '-bs' + str(args.batch_size) + '-lr' + str(args.lr) + '-' + args.name
+        '-bs' + str(args.bs) + '-lr' + str(args.lr) + '-' + args.name
 outputPath = './models/'
 runPath = outputPath + runID
 pathlib.Path(runPath).mkdir(parents=True, exist_ok=True)
@@ -64,7 +64,6 @@ if True:
     with open(runPath+'/modelsummary.txt', 'w') as f:
         with redirect_stdout(f): model.summary()
 
-
 # Multi-gpu setup:
 basemodel = model
 if args.gpus > 1: model = multi_gpu_model(model, gpus=args.gpus)
@@ -74,14 +73,14 @@ optimizer = Adam(lr=args.lr, amsgrad=True)
 
 # Compile the model
 print('\n\n\n', 'Compiling model..', runID, '\n\n\tGPU ' + (str(args.gpus)+' gpus' if args.gpus > 1 else args.gpuids)
-        + '\t\tBatch size [ ' + str(args.batch_size) + ' ] ' + ' \n\n')
+        + '\t\tBatch size [ ' + str(args.bs) + ' ] ' + ' \n\n')
 model.compile(loss=depth_loss_function, optimizer=optimizer)
 
-print('Ready for training!')
+print('Ready for training!\n')
 
 # Callbacks
 if args.data == 'nyu':
-    callbacks = get_nyu_callbacks(model, basemodel, train_generator, test_generator)
+    callbacks = get_nyu_callbacks(model, basemodel, train_generator, test_generator, runPath)
 
 # Start training
 model.fit_generator(train_generator, callbacks=callbacks, validation_data=test_generator, epochs=args.epochs, shuffle=True)

@@ -2,7 +2,7 @@ import keras
 from keras import backend as K
 from utils import DepthNorm
 
-def get_nyu_callbacks(model, basemodel, train_generator, test_generator, runPath, lr_schedule):
+def get_nyu_callbacks(model, basemodel, train_generator, test_generator, runPath):
     callbacks = []
 
     # Callback: Learning Rate Scheduler

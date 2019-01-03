@@ -1,2 +1,4 @@
-/*.h5
 /__pycache__
+/models
+/*.h5
+/*.zip
