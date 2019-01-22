@@ -4,14 +4,25 @@ from PIL import Image
 def DepthNorm(x, maxDepth):
     return maxDepth / x
 
-def predict(model, images, minDepth=10, maxDepth=1000):
+def predict(model, images, minDepth=10, maxDepth=1000, batch_size=2):
     # Support multiple RGBs, one RGB image, even grayscale 
     if len(images.shape) < 3: images = np.stack((images,images,images), axis=2)
     if len(images.shape) < 4: images = images.reshape((1, images.shape[0], images.shape[1], images.shape[2]))
     # Compute predictions
-    predictions = model.predict(images, batch_size=2)
+    predictions = model.predict(images, batch_size=batch_size)
     # Put in expected range
     return np.clip(DepthNorm(predictions, maxDepth=1000), minDepth, maxDepth) / maxDepth
+
+def scale_up(scale, images):
+    from skimage.transform import resize
+    scaled = []
+    
+    for i in range(len(images)):
+        img = images[i]
+        output_shape = (scale * img.shape[0], scale * img.shape[1])
+        scaled.append( resize(img, output_shape, order=1, preserve_range=True, mode='reflect', anti_aliasing=True ) )
+
+    return np.stack(scaled)
 
 def load_images(image_files):
     loaded_images = []
@@ -69,3 +80,48 @@ def save_images(filename, outputs, inputs=None, gt=None, is_colormap=True, is_re
     montage =  display_images(outputs, inputs, is_colormap, is_rescale)
     im = Image.fromarray(np.uint8(montage*255))
     im.save(filename)
+
+def evaluate(model, rgb, depth, crop, batch_size = 4):
+    # Error computaiton based on https://github.com/tinghuiz/SfMLearner
+    def compute_errors(gt, pred):
+        thresh = np.maximum((gt / pred), (pred / gt))
+        
+        a1 = (thresh < 1.25   ).mean()
+        a2 = (thresh < 1.25 ** 2).mean()
+        a3 = (thresh < 1.25 ** 3).mean()
+
+        abs_rel = np.mean(np.abs(gt - pred) / gt)
+
+        rmse = (gt - pred) ** 2
+        rmse = np.sqrt(rmse.mean())
+
+        log_10 = (np.abs(np.log10(gt)-np.log10(pred))).mean()
+
+        return a1, a2, a3, abs_rel, rmse, log_10
+
+    depth_scores = np.zeros((6, len(rgb)))
+
+    bs = batch_size
+
+    for i in range(len(rgb)//bs):    
+        x = rgb[(i)*bs:(i+1)*bs,:,:,:]
+        
+        # Compute results
+        true_y = depth[(i)*bs:(i+1)*bs,:,:]
+        pred_y = scale_up(2, predict(model, x/255, minDepth=10, maxDepth=1000, batch_size=bs)[:,:,:,0]) * 10.0
+        
+        # Crop based on Eigen et al. crop
+        true_y = true_y[:,crop[0]:crop[1]+1, crop[2]:crop[3]+1]
+        pred_y = pred_y[:,crop[0]:crop[1]+1, crop[2]:crop[3]+1]
+        
+        # Compute errors per image in batch
+        for j in range(len(true_y)):
+            errors = compute_errors(true_y[j], pred_y[j])
+            for k in range(len(errors)):
+                depth_scores[k][(i*bs)+j] = errors[k]
+
+        if i > 0 and i % 20 == 0: print('',int((i / ((len(rgb)//bs)-1))*100),'/ 100','#')
+        print('.', end='')
+    print(' 100 / 100 #\n')
+
+    return depth_scores.mean(axis=1)
