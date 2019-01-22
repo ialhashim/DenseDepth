@@ -34,7 +34,7 @@ Offical Keras (TensorFlow) implementaiton. If you have any questions or need mor
 * Run `python train.py --data nyu --gpus 4 --bs 8`.
 
 ## Evaluation
-* Download, but don't extract, the ground truth test data from [here](https://s3-eu-west-1.amazonaws.com/densedepth/nyu_test.zip). Then simply run `python evaluate.py`.
+* Download, but don't extract, the ground truth test data from [here](https://s3-eu-west-1.amazonaws.com/densedepth/nyu_test.zip) (1.4 GB). Then simply run `python evaluate.py`.
 
 ## Reference
 Corresponding paper to cite:
