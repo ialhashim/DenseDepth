@@ -16,6 +16,7 @@ Offical Keras (TensorFlow) implementaiton. If you have any questions or need mor
 
 ## Requirements
 * This code is tested with Keras 2.2.4, Tensorflow 1.13, CUDA 9.0, on a machine with an NVIDIA Titan V and 16GB+ RAM running on Windows 10.
+* Other python packages needed `pillow matplotlib scikit-image`.
 * Training takes about 20 hours with 4 NVIDIA Titan Xp (or above).
 
 ## Pre-trained Models
