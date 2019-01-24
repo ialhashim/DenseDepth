@@ -23,6 +23,11 @@ def get_nyu_data(batch_size, nyu_data_zipfile='nyu_data.zip'):
     shape_rgb = (batch_size, 480, 640, 3)
     shape_depth = (batch_size, 240, 320, 1)
 
+    # Helpful for testing...
+    if False:
+        nyu2_train = nyu2_train[:10]
+        nyu2_test = nyu2_test[:10]
+
     return data, nyu2_train, nyu2_test, shape_rgb, shape_depth
 
 def get_nyu_train_test_data(batch_size):
@@ -52,7 +57,7 @@ class NYU_BasicAugmentRGBSequence(Sequence):
     def __len__(self):
         return int(np.ceil(self.N / float(self.batch_size)))
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx, is_apply_policy=True):
         batch_x, batch_y = np.zeros( self.shape_rgb ), np.zeros( self.shape_depth )
 
         # Augmentation of RGB images
@@ -68,7 +73,7 @@ class NYU_BasicAugmentRGBSequence(Sequence):
             batch_x[i] = nyu_resize(x, 480)
             batch_y[i] = nyu_resize(y, 240)
 
-            batch_x[i], batch_y[i] = self.policy(batch_x[i], batch_y[i])
+            if is_apply_policy: batch_x[i], batch_y[i] = self.policy(batch_x[i], batch_y[i])
 
             # DEBUG:
             #self.policy.debug_img(batch_x[i], np.clip(DepthNorm(batch_y[i])/maxDepth,0,1), idx, i)

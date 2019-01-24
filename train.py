@@ -3,7 +3,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '5'
 
 # Kerasa / TensorFlow
 from loss import depth_loss_function
-from utils import predict, save_images
+from utils import predict, save_images, load_test_data
 from model import create_model
 from data import get_nyu_train_test_data
 from callbacks import get_nyu_callbacks
@@ -24,6 +24,8 @@ parser.add_argument('--mindepth', type=float, default=10.0, help='Minimum of inp
 parser.add_argument('--maxdepth', type=float, default=1000.0, help='Maximum of input depths')
 parser.add_argument('--name', type=str, default='densedepth_nyu', help='A name to attach to the training session')
 parser.add_argument('--checkpoint', type=str, default='', help='Start training from an existing model.')
+parser.add_argument('--full', dest='full', action='store_true', help='Full training with metrics, checkpoints, and image samples.')
+
 args = parser.parse_args()
 
 # Create the model
@@ -41,12 +43,10 @@ if args.data == 'nyu':
     train_generator, test_generator = get_nyu_train_test_data( args.bs )
 
 # Training session details
-runID = str(int(time.time())) + '-n' + str(len(train_generator)) + '-e' + str(args.epochs) + \
-        '-bs' + str(args.bs) + '-lr' + str(args.lr) + '-' + args.name
+runID = str(int(time.time())) + '-n' + str(len(train_generator)) + '-e' + str(args.epochs) + '-bs' + str(args.bs) + '-lr' + str(args.lr) + '-' + args.name
 outputPath = './models/'
 runPath = outputPath + runID
 pathlib.Path(runPath).mkdir(parents=True, exist_ok=True)
-pathlib.Path(runPath+'/samples').mkdir(parents=True, exist_ok=True) 
 print('Output: ' + runPath)
 
  # (optional steps)
@@ -57,11 +57,11 @@ if True:
     with open(runPath+'/'+__file__, 'w') as training_script: training_script.write(training_script_content)
 
     # Generate model plot
-    plot_model(model, to_file=runPath+'/monodepth_model.svg', show_shapes=True, show_layer_names=True)
+    plot_model(model, to_file=runPath+'/model_plot.svg', show_shapes=True, show_layer_names=True)
 
     # Save model summary to file
     from contextlib import redirect_stdout
-    with open(runPath+'/modelsummary.txt', 'w') as f:
+    with open(runPath+'/model_summary.txt', 'w') as f:
         with redirect_stdout(f): model.summary()
 
 # Multi-gpu setup:
@@ -80,7 +80,7 @@ print('Ready for training!\n')
 
 # Callbacks
 if args.data == 'nyu':
-    callbacks = get_nyu_callbacks(model, basemodel, train_generator, test_generator, runPath)
+    callbacks = get_nyu_callbacks(model, basemodel, train_generator, test_generator, load_test_data() if args.full else None , runPath)
 
 # Start training
 model.fit_generator(train_generator, callbacks=callbacks, validation_data=test_generator, epochs=args.epochs, shuffle=True)

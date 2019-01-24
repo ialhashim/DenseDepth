@@ -31,6 +31,11 @@ def load_images(image_files):
         loaded_images.append(x)
     return np.stack(loaded_images, axis=0)
 
+def to_multichannel(i):
+    if i.shape[2] == 3: return i
+    i = i[:,:,0]
+    return np.stack((i,i,i), axis=2)
+        
 def display_images(outputs, inputs=None, gt=None, is_colormap=True, is_rescale=True):
     import matplotlib.pyplot as plt
     import skimage
@@ -40,11 +45,6 @@ def display_images(outputs, inputs=None, gt=None, is_colormap=True, is_rescale=T
 
     shape = (outputs[0].shape[0], outputs[0].shape[1], 3)
     
-    def to_multichannel(i):
-        if i.shape[2] == 3: return i
-        i = i[:,:,0]
-        return np.stack((i,i,i), axis=2)
-            
     all_images = []
 
     for i in range(outputs.shape[0]):
@@ -81,7 +81,19 @@ def save_images(filename, outputs, inputs=None, gt=None, is_colormap=True, is_re
     im = Image.fromarray(np.uint8(montage*255))
     im.save(filename)
 
-def evaluate(model, rgb, depth, crop, batch_size = 4):
+def load_test_data(test_data_zip_file='nyu_test.zip'):
+    print('Loading test data...', end='')
+    import numpy as np
+    from data import extract_zip
+    data = extract_zip(test_data_zip_file)
+    from io import BytesIO
+    rgb = np.load(BytesIO(data['eigen_test_rgb.npy']))
+    depth = np.load(BytesIO(data['eigen_test_depth.npy']))
+    crop = np.load(BytesIO(data['eigen_test_crop.npy']))
+    print('Test data loaded.\n')
+    return {'rgb':rgb, 'depth':depth, 'crop':crop}
+
+def evaluate(model, rgb, depth, crop, batch_size=4, verbose=True):
     # Error computaiton based on https://github.com/tinghuiz/SfMLearner
     def compute_errors(gt, pred):
         thresh = np.maximum((gt / pred), (pred / gt))
@@ -99,7 +111,7 @@ def evaluate(model, rgb, depth, crop, batch_size = 4):
 
         return a1, a2, a3, abs_rel, rmse, log_10
 
-    depth_scores = np.zeros((6, len(rgb)))
+    depth_scores = np.zeros((6, len(rgb))) # six metrics
 
     bs = batch_size
 
@@ -120,8 +132,10 @@ def evaluate(model, rgb, depth, crop, batch_size = 4):
             for k in range(len(errors)):
                 depth_scores[k][(i*bs)+j] = errors[k]
 
-        if i > 0 and i % 20 == 0: print('',int((i / ((len(rgb)//bs)-1))*100),'/ 100','#')
-        print('.', end='')
-    print(' 100 / 100 #\n')
+    e = depth_scores.mean(axis=1)
 
-    return depth_scores.mean(axis=1)
+    if verbose:
+        print("{:>10}, {:>10}, {:>10}, {:>10}, {:>10}, {:>10}".format('a1', 'a2', 'a3', 'rel', 'rms', 'log_10'))
+        print("{:10.4f}, {:10.4f}, {:10.4f}, {:10.4f}, {:10.4f}, {:10.4f}".format(e[0],e[1],e[2],e[3],e[4],e[5]))
+
+    return e
