@@ -93,7 +93,7 @@ def load_test_data(test_data_zip_file='nyu_test.zip'):
     print('Test data loaded.\n')
     return {'rgb':rgb, 'depth':depth, 'crop':crop}
 
-def evaluate(model, rgb, depth, crop, batch_size=4, verbose=True):
+def evaluate(model, rgb, depth, crop, batch_size=6, verbose=True):
     # Error computaiton based on https://github.com/tinghuiz/SfMLearner
     def compute_errors(gt, pred):
         thresh = np.maximum((gt / pred), (pred / gt))
