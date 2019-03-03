@@ -1,5 +1,5 @@
 ## [High Quality Monocular Depth Estimation via Transfer Learning (arXiv 2018)](https://arxiv.org/abs/1812.11941)
-**Ibraheem Alhashim** and **Peter Wonka**
+**[Ibraheem Alhashim](https://ialhashim.github.io/)** and **Peter Wonka**
 
 Offical Keras (TensorFlow) implementaiton. If you have any questions or need more help with the code, feel free to contact the first author.
 
@@ -15,7 +15,8 @@ Offical Keras (TensorFlow) implementaiton. If you have any questions or need mor
 </p>
 
 ## Requirements
-* This code is tested with Keras 2.2.4, Tensorflow 1.13, CUDA 9.0, on a machine with an NVIDIA Titan V and 16GB+ RAM running on Windows 10.
+* This code is tested with Keras 2.2.4, Tensorflow 1.13, CUDA 9.0, on a machine with an NVIDIA Titan V and 16GB+ RAM running on Windows 10 or Ubuntu 16.
+* Other packages needed `pillow matplotlib scikit-learn scikit-image pydot` and `GraphViz`.
 * Training takes about 20 hours with 4 NVIDIA Titan Xp (or above).
 
 ## Pre-trained Models
