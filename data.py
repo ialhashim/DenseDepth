@@ -138,7 +138,7 @@ def get_unreal_data(batch_size, unreal_data_file='unreal_data.h5'):
     unreal_test = keys[len(keys)-100:]
 
     # Helpful for testing...
-    if True:
+    if False:
         unreal_train = unreal_train[:10]
         unreal_test = unreal_test[:10]
 
