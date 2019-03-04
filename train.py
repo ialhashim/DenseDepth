@@ -5,7 +5,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '5'
 from loss import depth_loss_function
 from utils import predict, save_images, load_test_data
 from model import create_model
-from data import get_nyu_train_test_data
+from data import get_nyu_train_test_data, get_unreal_train_test_data
 from callbacks import get_nyu_callbacks
 
 from keras.optimizers import Adam
@@ -16,7 +16,7 @@ from keras.utils.vis_utils import plot_model
 parser = argparse.ArgumentParser(description='High Quality Monocular Depth Estimation via Transfer Learning')
 parser.add_argument('--data', default='nyu', type=str, help='Training dataset.')
 parser.add_argument('--lr', type=float, default=0.0001, help='Learning rate')
-parser.add_argument('--bs', type=int, default=2, help='Batch size')
+parser.add_argument('--bs', type=int, default=4, help='Batch size')
 parser.add_argument('--epochs', type=int, default=20, help='Number of epochs')
 parser.add_argument('--gpus', type=int, default=1, help='The number of GPUs to use')
 parser.add_argument('--gpuids', type=str, default='0', help='IDs of GPUs to use')
@@ -39,8 +39,8 @@ else:
     print('Will use ' + str(args.gpus) + ' GPUs.')
 
 # Data loaders
-if args.data == 'nyu':
-    train_generator, test_generator = get_nyu_train_test_data( args.bs )
+if args.data == 'nyu': train_generator, test_generator = get_nyu_train_test_data( args.bs )
+if args.data == 'unreal': train_generator, test_generator = get_unreal_train_test_data( args.bs )
 
 # Training session details
 runID = str(int(time.time())) + '-n' + str(len(train_generator)) + '-e' + str(args.epochs) + '-bs' + str(args.bs) + '-lr' + str(args.lr) + '-' + args.name
@@ -79,8 +79,9 @@ model.compile(loss=depth_loss_function, optimizer=optimizer)
 print('Ready for training!\n')
 
 # Callbacks
-if args.data == 'nyu':
-    callbacks = get_nyu_callbacks(model, basemodel, train_generator, test_generator, load_test_data() if args.full else None , runPath)
+callbacks = []
+if args.data == 'nyu': callbacks = get_nyu_callbacks(model, basemodel, train_generator, test_generator, load_test_data() if args.full else None , runPath)
+if args.data == 'unreal': callbacks = get_nyu_callbacks(model, basemodel, train_generator, test_generator, load_test_data() if args.full else None , runPath)
 
 # Start training
 model.fit_generator(train_generator, callbacks=callbacks, validation_data=test_generator, epochs=args.epochs, shuffle=True)
