@@ -36,6 +36,7 @@ def create_model(existing='', is_twohundred=False, is_halffeatures=False):
             up_i = BilinearUpSampling2D((2, 2), name=name+'_upsampling2d')(tensor)
             up_i = Concatenate(name=name+'_concat')([up_i, base_model.get_layer(concat_with).output]) # Skip connection
             up_i = Conv2D(filters=filters, kernel_size=3, strides=1, padding='same', name=name+'_convA')(up_i)
+            up_i = LeakyReLU(alpha=0.2)(up_i)
             up_i = Conv2D(filters=filters, kernel_size=3, strides=1, padding='same', name=name+'_convB')(up_i)
             up_i = LeakyReLU(alpha=0.2)(up_i)
             return up_i
