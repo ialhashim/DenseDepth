@@ -6,7 +6,7 @@ from keras.layers import Input, InputLayer, Conv2D, Activation, LeakyReLU, Conca
 from layers import BilinearUpSampling2D
 from loss import depth_loss_function
 
-def create_model(existing='', is_twohundred=False, is_halffeatures=False):
+def create_model(existing='', is_twohundred=False, is_halffeatures=True):
         
     if len(existing) == 0:
         print('Loading base model (DenseNet)..')
