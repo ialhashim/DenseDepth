@@ -3,6 +3,8 @@
 
 Offical Keras (TensorFlow) implementaiton. If you have any questions or need more help with the code, feel free to contact the first author.
 
+**[Update]** Experimental PyTorch code added.
+
 ## Results
 
 * KITTI
