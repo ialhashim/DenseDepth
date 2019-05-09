@@ -28,6 +28,10 @@ Offical Keras (TensorFlow) implementaiton. If you have any questions or need mor
 
 ## Demo
 * After downloading the pre-trained model (nyu.h5), run `python test.py`. You should see a montage of images with their estimated depth maps.
+* **[Update]** A Qt demo showing 3D point clouds from the webcam or an image. Simply run `python demo.py`. 
+<p align="center">
+  <img style="max-width:500px" src="https://s3-eu-west-1.amazonaws.com/densedepth/densedepth_results_04.jpg" alt="RGBD Demo">
+</p>
 
 ## Data
 * [NYU Depth V2 (50K)](https://s3-eu-west-1.amazonaws.com/densedepth/nyu_data.zip) (4.1 GB): You don't need to extract the dataset since the code loads the entire zip file into memory when training.
