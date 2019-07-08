@@ -3,6 +3,7 @@
 
 Offical Keras (TensorFlow) implementaiton. If you have any questions or need more help with the code, feel free to contact the first author.
 
+**[Update]** Experimental TensorFlow 2.0 implementation added.
 **[Update]** Experimental PyTorch code added.
 
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/high-quality-monocular-depth-estimation-via/monocular-depth-estimation-on-nyu-depth-v2)](https://paperswithcode.com/sota/monocular-depth-estimation-on-nyu-depth-v2?p=high-quality-monocular-depth-estimation-via)
