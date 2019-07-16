@@ -1,6 +1,7 @@
 import os
 import glob
 import argparse
+import matplotlib
 
 # Keras / TensorFlow
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '5'
@@ -31,6 +32,9 @@ print('\nLoaded ({0}) images of size {1}.'.format(inputs.shape[0], inputs.shape[
 
 # Compute results
 outputs = predict(model, inputs)
+
+#matplotlib problem on ubuntu terminal fix
+matplotlib.use('TkAgg')   
 
 # Display results
 viz = display_images(outputs.copy(), inputs.copy())
