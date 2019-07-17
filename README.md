@@ -33,7 +33,7 @@ Offical Keras (TensorFlow) implementaiton. If you have any questions or need mor
 
 ## Demos
 * After downloading the pre-trained model (nyu.h5), run `python test.py`. You should see a montage of images with their estimated depth maps.
-* **[Update]** A Qt demo showing 3D point clouds from the webcam or an image. Simply run `python demo.py`. 
+* **[Update]** A Qt demo showing 3D point clouds from the webcam or an image. Simply run `python demo.py`. It requires the packages `PyGLM PySide2`. 
 <p align="center">
   <img style="max-width:500px" src="https://s3-eu-west-1.amazonaws.com/densedepth/densedepth_results_04.jpg" alt="RGBD Demo">
 </p>
