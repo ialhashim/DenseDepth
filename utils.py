@@ -93,29 +93,26 @@ def load_test_data(test_data_zip_file='nyu_test.zip'):
     print('Test data loaded.\n')
     return {'rgb':rgb, 'depth':depth, 'crop':crop}
 
-def evaluate(model, rgb, depth, crop, batch_size=6, verbose=True):
-    # Error computaiton based on https://github.com/tinghuiz/SfMLearner
-    def compute_errors(gt, pred):
-        thresh = np.maximum((gt / pred), (pred / gt))
-        
-        a1 = (thresh < 1.25   ).mean()
-        a2 = (thresh < 1.25 ** 2).mean()
-        a3 = (thresh < 1.25 ** 3).mean()
+def compute_errors(gt, pred):
+    thresh = np.maximum((gt / pred), (pred / gt))
+    a1 = (thresh < 1.25   ).mean()
+    a2 = (thresh < 1.25 ** 2).mean()
+    a3 = (thresh < 1.25 ** 3).mean()
+    abs_rel = np.mean(np.abs(gt - pred) / gt)
+    rmse = (gt - pred) ** 2
+    rmse = np.sqrt(rmse.mean())
+    log_10 = (np.abs(np.log10(gt)-np.log10(pred))).mean()
+    return a1, a2, a3, abs_rel, rmse, log_10
 
-        abs_rel = np.mean(np.abs(gt - pred) / gt)
-
-        rmse = (gt - pred) ** 2
-        rmse = np.sqrt(rmse.mean())
-
-        log_10 = (np.abs(np.log10(gt)-np.log10(pred))).mean()
-
-        return a1, a2, a3, abs_rel, rmse, log_10
-
-    depth_scores = np.zeros((6, len(rgb))) # six metrics
+def evaluate(model, rgb, depth, crop, batch_size=6, verbose=False):
+    N = len(rgb)
 
     bs = batch_size
 
-    for i in range(len(rgb)//bs):    
+    predictions = []
+    testSetDepths = []
+    
+    for i in range(N//bs):    
         x = rgb[(i)*bs:(i+1)*bs,:,:,:]
         
         # Compute results
@@ -132,12 +129,13 @@ def evaluate(model, rgb, depth, crop, batch_size=6, verbose=True):
         
         # Compute errors per image in batch
         for j in range(len(true_y)):
-            errors = compute_errors(true_y[j], (0.5 * pred_y[j]) + (0.5 * np.fliplr(pred_y_flip[j])))
-            
-            for k in range(len(errors)):
-                depth_scores[k][(i*bs)+j] = errors[k]
+            predictions.append(   (0.5 * pred_y[j]) + (0.5 * np.fliplr(pred_y_flip[j]))   )
+            testSetDepths.append(   true_y[j]   )
 
-    e = depth_scores.mean(axis=1)
+    predictions = np.stack(predictions, axis=0)
+    testSetDepths = np.stack(testSetDepths, axis=0)
+
+    e = compute_errors(predictions, testSetDepths)
 
     if verbose:
         print("{:>10}, {:>10}, {:>10}, {:>10}, {:>10}, {:>10}".format('a1', 'a2', 'a3', 'rel', 'rms', 'log_10'))
