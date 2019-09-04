@@ -34,7 +34,7 @@ print('\nLoaded ({0}) images of size {1}.'.format(inputs.shape[0], inputs.shape[
 outputs = predict(model, inputs)
 
 #matplotlib problem on ubuntu terminal fix
-matplotlib.use('TkAgg')   
+#matplotlib.use('TkAgg')   
 
 # Display results
 viz = display_images(outputs.copy(), inputs.copy())
