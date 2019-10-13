@@ -22,7 +22,7 @@ Offical Keras (TensorFlow) implementaiton. If you have any questions or need mor
 
 ## Requirements
 * This code is tested with Keras 2.2.4, Tensorflow 1.13, CUDA 9.0, on a machine with an NVIDIA Titan V and 16GB+ RAM running on Windows 10 or Ubuntu 16.
-* Other packages needed `keras pillow matplotlib scikit-learn scikit-image opencv-python pydot` and `GraphViz` for the model graph and `PyGLM PySide2 opencv-python` for the GUI demo.
+* Other packages needed `keras pillow matplotlib scikit-learn scikit-image opencv-python pydot` and `GraphViz` for the model graph and `PyGLM PySide2` for the GUI demo.
 * Minimum hardware tested on for inference NVIDIA GeForce 940MX (laptop) / NVIDIA GeForce GTX 950 (desktop).
 * Training takes about 24 hours on a single NVIDIA TITAN RTX with batch size 8.
 
