@@ -25,7 +25,6 @@ Offical Keras (TensorFlow) implementaiton. If you have any questions or need mor
 * Other packages needed `keras pillow matplotlib scikit-learn scikit-image opencv-python pydot` and `GraphViz` for the model graph and `PyGLM PySide2` for the GUI demo.
 * Minimum hardware tested on for inference NVIDIA GeForce 940MX (laptop) / NVIDIA GeForce GTX 950 (desktop).
 * Training takes about 24 hours on a single NVIDIA TITAN RTX with batch size 8.
-* For the point cloud demo, make sure to install the packages `PyGLM PySide2`.
 
 ## Pre-trained Models
 * [NYU Depth V2](https://s3-eu-west-1.amazonaws.com/densedepth/nyu.h5) (165 MB)
