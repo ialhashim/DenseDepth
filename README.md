@@ -1,7 +1,7 @@
 ## [High Quality Monocular Depth Estimation via Transfer Learning (arXiv 2018)](https://arxiv.org/abs/1812.11941)
 **[Ibraheem Alhashim](https://ialhashim.github.io/)** and **Peter Wonka**
 
-Offical Keras (TensorFlow) implementaiton. If you have any questions or need more help with the code, feel free to contact the first author.
+Offical Keras (TensorFlow) implementaiton. If you have any questions or need more help with the code, contact the **first author**.
 
 **[Update]** Added a Colab notebook to try the method on the fly.
 
