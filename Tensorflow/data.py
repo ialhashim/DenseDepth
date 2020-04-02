@@ -49,10 +49,10 @@ class DataLoader():
 
     def get_batched_dataset(self, batch_size):
         self.dataset = tf.data.Dataset.from_tensor_slices((self.filenames, self.labels))
+        self.dataset = self.dataset.shuffle(buffer_size=len(self.filenames), reshuffle_each_iteration=True)
         self.dataset = self.dataset.repeat()
         self.dataset = self.dataset.map(map_func=self._parse_function, num_parallel_calls=tf.data.experimental.AUTOTUNE)
         self.dataset = self.dataset.batch(batch_size=batch_size)
 
-        iterator = self.dataset.make_one_shot_iterator()
-        return iterator
+        return self.dataset
 
