@@ -35,7 +35,7 @@ rgb_height = height_rgb
 
 import tensorflow as tf
 global graph,model
-graph = tf.get_default_graph()
+graph = tf.compat.v1.get_default_graph()
 
 def load_model():
     # Kerasa / TensorFlow
