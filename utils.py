@@ -27,7 +27,7 @@ def scale_up(scale, images):
 def load_images(image_files):
     loaded_images = []
     for file in image_files:
-        x = np.clip(np.asarray(Image.open( file ), dtype=float) / 255, 0, 1)
+        x = np.clip(np.asarray(Image.open( file ).resize((640,480), Image.ANTIALIAS), dtype=float) / 255, 0, 1)
         loaded_images.append(x)
     return np.stack(loaded_images, axis=0)
 
@@ -41,7 +41,7 @@ def display_images(outputs, inputs=None, gt=None, is_colormap=True, is_rescale=T
     import skimage
     from skimage.transform import resize
 
-    plasma = plt.get_cmap('plasma')
+    plasma = plt.get_cmap('Greys')
 
     shape = (outputs[0].shape[0], outputs[0].shape[1], 3)
     
