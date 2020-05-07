@@ -4,7 +4,7 @@ from PIL import Image
 def DepthNorm(x, maxDepth):
     return maxDepth / x
 
-def predict(model, images, minDepth=10, maxDepth=1000, batch_size=2):
+def predict(model, images, minDepth=10, maxDepth=1000, batch_size=40):
     # Support multiple RGBs, one RGB image, even grayscale 
     if len(images.shape) < 3: images = np.stack((images,images,images), axis=2)
     if len(images.shape) < 4: images = images.reshape((1, images.shape[0], images.shape[1], images.shape[2]))
@@ -26,10 +26,12 @@ def scale_up(scale, images):
 
 def load_images(image_files):
     loaded_images = []
+    image_names   = []
     for file in image_files:
+        image_names.append(file.split('/')[-1])
         x = np.clip(np.asarray(Image.open( file ).resize((640,480), Image.ANTIALIAS), dtype=float) / 255, 0, 1)
         loaded_images.append(x)
-    return np.stack(loaded_images, axis=0)
+    return (np.stack(loaded_images, axis=0), image_names)
 
 def to_multichannel(i):
     if i.shape[2] == 3: return i
