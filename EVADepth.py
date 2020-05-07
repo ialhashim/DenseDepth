@@ -32,4 +32,4 @@ def denseDepthModel( model, ipDir, opDir):
     rescaled = rescaled - np.min(rescaled)
     rescaled = rescaled * 255 / np.max(rescaled)
     img = Image.fromarray(np.uint8(rescaled), mode='L').resize((224,224), Image.ANTIALIAS)
-    img.save(opDir+ip_names[i], , quality=90, optimize=True)
+    img.save(opDir+ip_names[i], quality=90, optimize=True)
