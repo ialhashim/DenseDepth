@@ -5,6 +5,7 @@ import matplotlib
 from PIL import Image
 import numpy as np
 import csv
+import time
 #from skimage.io import imsave
 
 
@@ -17,9 +18,10 @@ from matplotlib import pyplot as plt
 
 def denseDepthModel( model, labelInfo):
   # Input images
+  program_starts = time.time()
   with open( labelInfo, 'r') as labelData:
     labels = csv.reader(labelData, delimiter=';')
-    
+    total = len(labels)
     image_names   = []
     loaded_images = []
     for labelID,label in enumerate(labels):
@@ -36,6 +38,8 @@ def denseDepthModel( model, labelInfo):
           rescaled = rescaled * 255 / np.max(rescaled)
           img = Image.fromarray(np.uint8(rescaled), mode='L').resize((224,224), Image.ANTIALIAS)
           img.save(image_names[i], quality=85, optimize=True)
+        now = time.time()
+        print("{}/{} done within {} seconds".format(labelID,total, (now - program_starts)))
         
         image_names   = []
         loaded_images = []
