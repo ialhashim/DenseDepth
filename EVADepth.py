@@ -21,15 +21,16 @@ def denseDepthModel( model, labelInfo):
   program_starts = time.time()
   with open( labelInfo, 'r') as labelData:
     labels = csv.reader(labelData, delimiter=';')
-    labels = list(labels)
-    total = len(labels)
+    # labels = list(labels)
+    total = 400000
     image_names   = []
     loaded_images = []
     for labelID,label in enumerate(labels):
-      if labelID%1000 == 0 and labelID != 0:
+      if (labelID%60 == 0) and (labelID != 0):
+        print(len(loaded_images))
         inputs = np.stack(loaded_images, axis=0)
         # Compute results
-        outputs = predict(model, inputs, batch_size=1000)
+        outputs = predict(model, inputs, batch_size=60)
         # Save results
         for i in range(outputs.shape[0]):
           #imsave(opDir+'sci_'+ip_names[i],outputs[i][:,:,0])
@@ -48,6 +49,7 @@ def denseDepthModel( model, labelInfo):
       loaded_images.append(x)
       image_names.append(label[3])
     if len(image_names) != 0:
+      print(len(image_names))
       inputs = np.stack(loaded_images, axis=0)
       # Compute results
       outputs = predict(model, inputs, batch_size=len(image_names))
