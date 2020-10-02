@@ -2,6 +2,9 @@ import os
 import glob
 import argparse
 import matplotlib
+from PIL import Image
+import numpy as np
+from tqdm import tqdm
 
 # Keras / TensorFlow
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '5'
@@ -32,13 +35,25 @@ print('\nLoaded ({0}) images of size {1}.'.format(inputs.shape[0], inputs.shape[
 
 # Compute results
 outputs = predict(model, inputs)
+import matplotlib.pyplot as plt
+import numpy as np
+
+for i in tqdm(range(len(outputs))):
+  rescaled = outputs[i][:,:,0]
+  rescaled = rescaled - np.min(rescaled)
+  rescaled = rescaled / np.max(rescaled)
+
+
+  plasma = plt.get_cmap('plasma')
+  x = Image.fromarray(np.uint8(plasma(rescaled)*255))
+  x.save('/content/depth_maps/{:05d}.png'.format(i))
 
 #matplotlib problem on ubuntu terminal fix
 #matplotlib.use('TkAgg')   
 
 # Display results
-viz = display_images(outputs.copy(), inputs.copy())
-plt.figure(figsize=(10,5))
-plt.imshow(viz)
-plt.savefig('test.png')
-plt.show()
+#viz = display_images(outputs.copy(), inputs.copy())
+#plt.figure(figsize=(10,5))
+#plt.imshow(viz)
+#plt.savefig('test.png')
+#plt.show()
