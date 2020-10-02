@@ -33,21 +33,28 @@ print('\nModel loaded ({0}).'.format(args.model))
 inputs = load_images( glob.glob(args.input) )
 print('\nLoaded ({0}) images of size {1}.'.format(inputs.shape[0], inputs.shape[1:]))
 
-# Compute results
-outputs = predict(model, inputs)
-import matplotlib.pyplot as plt
-import numpy as np
+import os
+x = os.listdir('/content/DenseDepth/examples')
+for i in tqdm(range(len(x))):
+  try:
+    inputs = load_images(glob.glob('examples/'+ x[i]))
+  except:
+    continue
 
-for i in tqdm(range(len(outputs))):
-  rescaled = outputs[i][:,:,0]
-  rescaled = rescaled - np.min(rescaled)
-  rescaled = rescaled / np.max(rescaled)
+  outputs = predict(model, inputs)
+  import matplotlib.pyplot as plt
+  import numpy as np
+  for i in (range(len(outputs))):
+    rescaled = outputs[i][:,:,0]
+    rescaled = rescaled - np.min(rescaled)
+    rescaled = rescaled / np.max(rescaled)
 
 
-  plasma = plt.get_cmap('plasma')
-  x = Image.fromarray(np.uint8(plasma(rescaled)*255))
-  x.save('/content/depth_maps/{:05d}.png'.format(i))
+    plasma = plt.get_cmap('plasma')
+    y = Image.fromarray(np.uint8(plasma(rescaled)*255))
+    y.save('/content/blargh/{}.png'.format(x[i].split()[0]))
 
+'''
 #matplotlib problem on ubuntu terminal fix
 #matplotlib.use('TkAgg')   
 
@@ -57,3 +64,4 @@ for i in tqdm(range(len(outputs))):
 #plt.imshow(viz)
 #plt.savefig('test.png')
 #plt.show()
+'''
