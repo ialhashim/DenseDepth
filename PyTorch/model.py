@@ -50,9 +50,9 @@ class Encoder(nn.Module):
         for k, v in self.original_model.features._modules.items(): features.append( v(features[-1]) )
         return features
 
-class Model(nn.Module):
+class PTModel(nn.Module):
     def __init__(self):
-        super(Model, self).__init__()
+        super(PTModel, self).__init__()
         self.encoder = Encoder()
         self.decoder = Decoder()
 
