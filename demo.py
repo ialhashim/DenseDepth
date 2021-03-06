@@ -34,6 +34,7 @@ rgb_width = width_rgb
 rgb_height = height_rgb
 
 import tensorflow as tf
+tf.compat.v1.disable_eager_execution()
 global graph,model
 graph = tf.compat.v1.get_default_graph()
 
