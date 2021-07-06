@@ -29,7 +29,7 @@ Offical Keras (TensorFlow) implementaiton. If you have any questions or need mor
 * Training takes about 24 hours on a single NVIDIA TITAN RTX with batch size 8.
 
 ## Pre-trained Models
-* [NYU Depth V2](https://s3-eu-west-1.amazonaws.com/densedepth/nyu.h5) (165 MB)
+* [NYU Depth V2](https://drive.google.com/file/d/19dfvGvDfCRYaqxVKypp1fRHwK7XtSjVu/view?usp=sharing) (165 MB)
 * [KITTI](https://s3-eu-west-1.amazonaws.com/densedepth/kitti.h5) (165 MB)
 
 ## Demos
