@@ -30,7 +30,7 @@ Offical Keras (TensorFlow) implementaiton. If you have any questions or need mor
 
 ## Pre-trained Models
 * [NYU Depth V2](https://drive.google.com/file/d/19dfvGvDfCRYaqxVKypp1fRHwK7XtSjVu/view?usp=sharing) (165 MB)
-* [KITTI](https://s3-eu-west-1.amazonaws.com/densedepth/kitti.h5) (165 MB)
+* [KITTI](https://drive.google.com/file/d/19flUnbJ_6q2xtjuUQvjt1Y1cJRwOr-XY/view?usp=sharing) (165 MB)
 
 ## Demos
 * After downloading the pre-trained model (nyu.h5), run `python test.py`. You should see a montage of images with their estimated depth maps.
