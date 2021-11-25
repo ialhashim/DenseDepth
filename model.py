@@ -13,9 +13,9 @@ def create_model(existing='', is_twohundred=False, is_halffeatures=True):
 
         # Encoder Layers
         if is_twohundred:
-            base_model = applications.DenseNet201(input_shape=(None, None, 3), include_top=False)
+            base_model = applications.densenet.DenseNet201(input_shape=(None, None, 3), include_top=False)
         else:
-            base_model = applications.DenseNet169(input_shape=(None, None, 3), include_top=False)
+            base_model = applications.densenet.DenseNet169(input_shape=(None, None, 3), include_top=False)
 
         print('Base model loaded.')
 
