@@ -6,10 +6,9 @@
 #
 # Uses 'pypardiso' solver 
 #
-import scipy
 import skimage
-import numpy as np
-from pypardiso import spsolve
+import scipy
+from scipy.sparse.linalg import spsolve
 from PIL import Image
 
 #
