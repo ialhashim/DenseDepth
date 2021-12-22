@@ -8,6 +8,7 @@
 #
 import skimage
 import scipy
+import numpy as np
 from scipy.sparse.linalg import spsolve
 from PIL import Image
 
