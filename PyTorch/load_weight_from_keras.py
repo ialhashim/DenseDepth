@@ -19,7 +19,7 @@ import torch.nn as nn
 from torchvision import models
 import torch.nn.functional as F
 
-from pytorch_model import PTModel
+from model import PTModel
 
 # Argument Parser
 parser = argparse.ArgumentParser(description='High Quality Monocular Depth Estimation via Transfer Learning')
