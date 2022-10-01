@@ -112,11 +112,12 @@ pytorch_input = torch.from_numpy(inputs[0,:,:,:]).permute(2,0,1).unsqueeze(0)
 
 print(pytorch_input.shape)
 # print('\nLoaded ({0}) images of size {1}.'.format(inputs.shape[0], inputs.shape[1:]))
-tic = time.time()
-# # Compute results
-output = my_predict(pytorch_model,pytorch_input[0,:,:,:].unsqueeze(0))
-toc  = time.time()
-print(toc-tic)
+# Compute results (When it prdeicts on first it takes some time after that it runs fast you can check with using for loop)
+for i in range(100):
+  tic = time.time()
+  output = my_predict(pytorch_model,pytorch_input[0,:,:,:].unsqueeze(0))
+  toc  = time.time()
+  print(toc-tic)
 print(output.shape)
 plt.imshow(output[0,0,:,:])
 plt.savefig('test.png')
