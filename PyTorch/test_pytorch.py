@@ -29,64 +29,64 @@ parser.add_argument('--model', default='../nyu.h5', type=str, help='Trained Kera
 parser.add_argument('--input', default='../examples/*.png', type=str, help='Input filename or folder.')
 args = parser.parse_args()
 
-# # Custom object needed for inference and training
-# custom_objects = {'BilinearUpSampling2D': BilinearUpSampling2D, 'depth_loss_function': None}
+# Custom object needed for inference and training
+custom_objects = {'BilinearUpSampling2D': BilinearUpSampling2D, 'depth_loss_function': None}
 
-# print('Loading model...')
+print('Loading model...')
 
-# # Load model into GPU / CPU
-# model = load_model(args.model, custom_objects=custom_objects, compile=False)
-# names = [weight.name for layer in model.layers for weight in layer.weights]
-# weights = model.get_weights()
+# Load model into GPU / CPU
+model = load_model(args.model, custom_objects=custom_objects, compile=False)
+names = [weight.name for layer in model.layers for weight in layer.weights]
+weights = model.get_weights()
 
-# keras_name = []
-# for name, weight in zip(names, weights):
-#   keras_name.append(name)
+keras_name = []
+for name, weight in zip(names, weights):
+  keras_name.append(name)
 
-# pytorch_model = PTModel().float()
+pytorch_model = PTModel().float()
 
-# # load parameter from keras
-# keras_state_dict = {} 
-# j = 0
-# for name, param in pytorch_model.named_parameters():
+# load parameter from keras
+keras_state_dict = {} 
+j = 0
+for name, param in pytorch_model.named_parameters():
   
-#   if 'classifier' in name:
-#     keras_state_dict[name]=param
-#     continue
+  if 'classifier' in name:
+    keras_state_dict[name]=param
+    continue
 
-#   if 'conv' in name and 'weight' in name:
-#     keras_state_dict[name]=torch.from_numpy(np.transpose(weights[j],(3, 2, 0, 1)))
-#     # print(name,keras_name[j])
-#     j = j+1
-#     continue
+  if 'conv' in name and 'weight' in name:
+    keras_state_dict[name]=torch.from_numpy(np.transpose(weights[j],(3, 2, 0, 1)))
+    # print(name,keras_name[j])
+    j = j+1
+    continue
   
-#   if 'conv' in name and 'bias' in name:
-#     keras_state_dict[name]=torch.from_numpy(weights[j])
-#     # print(param.shape,weights[j].size)
-#     j = j+1
-#     continue
+  if 'conv' in name and 'bias' in name:
+    keras_state_dict[name]=torch.from_numpy(weights[j])
+    # print(param.shape,weights[j].size)
+    j = j+1
+    continue
 
-#   if 'norm' in name and 'weight' in name:
-#     keras_state_dict[name]=torch.from_numpy(weights[j])
-#     # print(param.shape,weights[j].shape)
-#     j = j+1
-#     continue
+  if 'norm' in name and 'weight' in name:
+    keras_state_dict[name]=torch.from_numpy(weights[j])
+    # print(param.shape,weights[j].shape)
+    j = j+1
+    continue
 
-#   if 'norm' in name and 'bias' in name:
-#     keras_state_dict[name]=torch.from_numpy(weights[j])
-#     # print(param.shape,weights[j].size)
-#     j = j+1
-#     keras_state_dict[name.replace("bias", "running_mean")]=torch.from_numpy(weights[j])
-#     # print(param.shape,weights[j].size)
-#     j = j+1
-#     keras_state_dict[name.replace("bias", "running_var")]=torch.from_numpy(weights[j])
-#     # print(param.shape,weights[j].size)
-#     j = j+1
-#     continue
+  if 'norm' in name and 'bias' in name:
+    keras_state_dict[name]=torch.from_numpy(weights[j])
+    # print(param.shape,weights[j].size)
+    j = j+1
+    keras_state_dict[name.replace("bias", "running_mean")]=torch.from_numpy(weights[j])
+    # print(param.shape,weights[j].size)
+    j = j+1
+    keras_state_dict[name.replace("bias", "running_var")]=torch.from_numpy(weights[j])
+    # print(param.shape,weights[j].size)
+    j = j+1
+    continue
 
 
-# pytorch_model.load_state_dict(keras_state_dict)
-pytorch_model = torch.load('depth_3.pth')
+pytorch_model.load_state_dict(keras_state_dict)
+# pytorch_model = torch.load('depth_3.pth')
 pytorch_model.eval()
 #torch.save(pytorch_model,"depth_3.pth")
 pytorch_model.to(device)
