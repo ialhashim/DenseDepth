@@ -3,7 +3,7 @@
 
 **[Update] Our latest method with better performance can be found here [AdaBins](https://github.com/shariqfarooq123/AdaBins).**
 
-Offical Keras (TensorFlow) implementaiton. If you have any questions or need more help with the code, contact the **first author**.
+Official Keras (TensorFlow) implementation. If you have any questions or need more help with the code, contact the **first author**.
 
 **[Update]** Added a [Colab notebook](https://github.com/ialhashim/DenseDepth/blob/master/DenseDepth.ipynb) to try the method on the fly.
 
