@@ -5,11 +5,15 @@
 
 Offical Keras (TensorFlow) implementaiton. If you have any questions or need more help with the code, contact the **first author**.
 
-**[Update]** Added a [Colab notebook](https://github.com/ialhashim/DenseDepth/blob/master/DenseDepth.ipynb) to try the method on the fly.
+**[Update]** Added a [Colab notebook](https://github.com/Avi241/DenseDepth/blob/master/DenseDepth.ipynb) to try the method on the fly.
 
 **[Update]** Experimental TensorFlow 2.0 implementation added.
 
 **[Update]** Experimental PyTorch code added.
+
+**[Update]** Implemented cuda version of Pytorch.
+
+**[Update]** Added Pytorch model for both Python3 and Python2. Please Find it [here.](https://drive.google.com/file/d/1Wi-w9uyErZwCn_x3DQeILntQgLdml72p/view?usp=share_link)
 
 ## Results
 

@@ -19,13 +19,18 @@ import torch.nn as nn
 from torchvision import models
 import torch.nn.functional as F
 
-from pytorch_model import PTModel
+from model_pt import PTModel
 
-# Argument Parser
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+#device = 'cpu'
+#Argument Parser
 parser = argparse.ArgumentParser(description='High Quality Monocular Depth Estimation via Transfer Learning')
 parser.add_argument('--model', default='../nyu.h5', type=str, help='Trained Keras model file.')
 parser.add_argument('--input', default='../examples/*.png', type=str, help='Input filename or folder.')
+parser.add_argument('--cuda', default=1, type=int, help='Enable of Disbale Cuda')
 args = parser.parse_args()
+if args.cuda==0:
+  device = 'cpu'
 
 # Custom object needed for inference and training
 custom_objects = {'BilinearUpSampling2D': BilinearUpSampling2D, 'depth_loss_function': None}
@@ -84,7 +89,14 @@ for name, param in pytorch_model.named_parameters():
 
 
 pytorch_model.load_state_dict(keras_state_dict)
+# pytorch_model = torch.load('depth_3.pth')
 pytorch_model.eval()
+#torch.save(pytorch_model,"depth_3.pth")
+pytorch_model.to(device)
+if device.__eq__('cuda'):
+  print("Loaded model to GPU")
+else: 
+  print("Loaded model to CPU")
 
 
 def my_DepthNorm(x, maxDepth):
@@ -94,20 +106,27 @@ def my_predict(model, images, minDepth=10, maxDepth=1000):
 
   with torch.no_grad():
     # Compute predictions
-    predictions = model(images)
+    predictions = model(images.to(device))
 
     # Put in expected range
-  return np.clip(my_DepthNorm(predictions.numpy(), maxDepth=maxDepth), minDepth, maxDepth) / maxDepth
-
+  return np.clip(my_DepthNorm(predictions.cpu().numpy(), maxDepth=maxDepth), minDepth, maxDepth) / maxDepth
+import time
 # # Input images
 inputs = load_images( glob.glob(args.input) ).astype('float32')
+
 pytorch_input = torch.from_numpy(inputs[0,:,:,:]).permute(2,0,1).unsqueeze(0)
-print(pytorch_input.shape)
+
+print("Input Shape = " + str(pytorch_input.shape))
 # print('\nLoaded ({0}) images of size {1}.'.format(inputs.shape[0], inputs.shape[1:]))
 
-# # Compute results
-output = my_predict(pytorch_model,pytorch_input[0,:,:,:].unsqueeze(0))
-print(output.shape)
+# Compute results (When it prdeicts on first it takes some time after that it runs fast you can check with using for loop)
+for i in range(10):
+  tic = time.time()
+  output = my_predict(pytorch_model,pytorch_input[0,:,:,:].unsqueeze(0))
+  toc  = time.time()
+  print("Time for test "+str(i)+" "+str(1000*(toc-tic))+" ms")
+
+print("Output Shape = " + str(output.shape))
 plt.imshow(output[0,0,:,:])
 plt.savefig('test.png')
 plt.show()
