@@ -13,7 +13,7 @@ Offical Keras (TensorFlow) implementaiton. If you have any questions or need mor
 
 **[Update]** Implemented cuda version of Pytorch.
 
-**[Update]** Added Pytorch model for both Python3 and Python2. Please Find it here.
+**[Update]** Added Pytorch model for both Python3 and Python2. Please Find it [here.](https://drive.google.com/file/d/1Wi-w9uyErZwCn_x3DQeILntQgLdml72p/view?usp=share_link)
 
 ## Results
 
